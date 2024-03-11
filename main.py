@@ -49,36 +49,34 @@ class CategoryResource(Resource):
         else:
             return jsonify({'error': 'Space not found'}), 404
 #subcategory
-class Subcategory(Resource):
-    def get(self, category_name=None, parent_subcategory_name=None):
-        if category_name:
-            category = Category.query.filter_by(category_name=category_name).first()
-            ps = Subcategory.query.filter_by(parent_subcategory_name=parent_subcategory_name).first()
-            if category & ps is None:
-                return jsonify({'space_name': 'space_name', 'category_name': 'category_name'})
-        elif parent_subcategory_name:
-            subcategories = Subcategory.query.filter_by(parent_subcategory_name=parent_subcategory_name).all()
-            return jsonify([{'id': subcategory.id, 'subcategory_name': subcategory.subcategory_name,
-                             'parent_subcategory_id': subcategory.parent_subcategory_id,
-                             'parent_subcategory_name': subcategory.parent_subcategory_name,
-                             'category_id': subcategory.category_id, 'category_name': subcategory.category_name} for subcategory in subcategories])
-        else:
-            subcategories = Subcategory.query.all()
-            return jsonify([{'id': subcategory.id, 'subcategory_name': subcategory.subcategory_name,
-                             'parent_subcategory_id': subcategory.parent_subcategory_id,
-                             'parent_subcategory_name': subcategory.parent_subcategory_name,
-                             'category_id': subcategory.category_id, 'category_name': subcategory.category_name} for subcategory in subcategories])
+class SubcategoryResource(Resource):
+    def get(self,space_name=None ,category_name=None, parent_subcategory_name=None):
+        if space_name:
+            space = space.query.filter_by(space_name=space_name).first()
+            if space:
+                if category_name:
+                    category = Category.query.filter_by(category_name=category_name).first()
+                    if category:
+                        subcategories = Subcategory.query.filter_by(category_id=category.id).all()
+                        ps = Subcategory.query.filter_by(subcategory_name=parent_subcategory_name).first()
+                        if subcategories and ps is None:
+                            return jsonify([{'id': subcategory.id, 'subcategory_name': subcategory.subcategory_name, 'category_id': subcategory.category_id} for subcategory in subcategories])
 
 
 
+                else:
+                    categories = Category.query.filter_by(space_id=space.id).all()
+                    return jsonify([{'id': category.id, 'category_name': category.category_name, 'space_id': category.space_id} for category in categories])
 
+            else:
+                return jsonify({'message': 'Space not found'}), 404
 
 
 
 
 api.add_resource(SpaceResource, '/space', '/space/<string:space_name>')
 api.add_resource(CategoryResource, '/space/<string:space_name>/category', '/category')
-api.add_resource(SubcategoryResource, '/space/<string:space_name>/category/<string:category_name>/subcategory','/category/<string:category_name>/subcategory', '/subcategory','/space/<string:space_name>/category/<string:category_name>/subcategory/<string:parent_subcategory_name>')
+api.add_resource(SubcategoryResource, '/<string:category_name>/subcategory', '/subcategory', '/<string:category_name>/<string:parent_subcategory_name>/subcategory', '/<string:parent_subcategory_name>/subcategory','/space/<string:space_name>/category/<string:category_name>/subcategory','/space/<string:space_name>/category/<string:category_name>/<string:parent_subcategory_name>/subcategory')
 
 
 
