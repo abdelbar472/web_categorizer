@@ -61,9 +61,9 @@ class SubcategoryResource(Resource):
                         ps = Subcategory.query.filter_by(subcategory_name=parent_subcategory_name).first()
                         if subcategories and ps is None:
                             return jsonify([{'id': subcategory.id, 'subcategory_name': subcategory.subcategory_name, 'category_id': subcategory.category_id} for subcategory in subcategories])
-
-
-
+                        elif subcategories and ps:
+                            subcategories = Subcategory.query.filter_by(parent_subcategory_id=ps.id).all()
+                            return jsonify([{'id': subcategory.id, 'subcategory_name': subcategory.subcategory_name, 'category_id': subcategory.category_id} for subcategory in subcategories])
                 else:
                     categories = Category.query.filter_by(space_id=space.id).all()
                     return jsonify([{'id': category.id, 'category_name': category.category_name, 'space_id': category.space_id} for category in categories])
@@ -76,7 +76,7 @@ class SubcategoryResource(Resource):
 
 api.add_resource(SpaceResource, '/space', '/space/<string:space_name>')
 api.add_resource(CategoryResource, '/space/<string:space_name>/category', '/category')
-api.add_resource(SubcategoryResource, '/<string:category_name>/subcategory', '/subcategory', '/<string:category_name>/<string:parent_subcategory_name>/subcategory', '/<string:parent_subcategory_name>/subcategory','/space/<string:space_name>/category/<string:category_name>/subcategory','/space/<string:space_name>/category/<string:category_name>/<string:parent_subcategory_name>/subcategory')
+api.add_resource(SubcategoryResource,'/space/<string:space_name>/category/<string:category_name>/subcategory','/subcategory','/space/<string:space_name>/category/<string:category_name>/subcategory/<string:parent_subcategory_name>', '/subcategory/<string:parent_subcategory_name>')
 
 
 
