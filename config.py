@@ -1,7 +1,8 @@
-from flask import Flask, session, render_template,redirect,request,url_for,jsonify
+from flask import Flask, session, render_template,redirect,request,url_for,jsonify,make_response
 from datetime import timedelta
 from flask_restful import Resource, reqparse, Api
 from flask_sqlalchemy import SQLAlchemy
+import random
 from urllib.parse import urlparse
 import requests
 from PIL import Image, ImageTk
