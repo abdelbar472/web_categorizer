@@ -1,0 +1,12 @@
+<<<<<<< HEAD
+Flask
+Flask-RESTful
+Flask-SQLAlchemy
+Pillow
+=======
+Flask
+Flask-RESTful
+Flask-SQLAlchemy
+Pillow
+>>>>>>> da1b546a620ba5c6abcbf17c2cdc9da7db954cbb
+requests
